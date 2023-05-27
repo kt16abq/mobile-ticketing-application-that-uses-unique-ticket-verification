@@ -1,0 +1,37 @@
+// Import required libraries
+const express = require('express');
+const qr = require('qr-image');
+
+// Create a new express application
+const app = express();
+
+// Define a route to handle ticket purchases
+app.post('/buy-ticket', (req, res) => {
+    // In a real application, you'd pull event details from a database and
+    // process payment information. For simplicity, we'll skip that here.
+    
+    // Generate a unique ticket ID. In a real application, this would likely
+    // come from your database.
+    const ticketId = Math.floor(Math.random() * 1000000);
+
+    // Create ticket information
+    const ticketInfo = {
+        event: 'Sample Event',
+        date: '2023-05-27',
+        time: '18:00',
+        seat: 'A1',
+        ticketId: ticketId
+    };
+
+    // Generate a QR code from the ticket information
+    const qrPng = qr.imageSync(JSON.stringify(ticketInfo), { type: 'png' });
+
+    // In a real application, you'd probably want to save this image and send a link to it.
+    // To keep this example simple, we'll just send the image back directly.
+    res.setHeader('Content-Type', 'image/png');
+    qrPng.pipe(res);
+});
+
+// Start the server
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server started on port ${port}`));
